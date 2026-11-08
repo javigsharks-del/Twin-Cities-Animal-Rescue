@@ -1,0 +1,168 @@
+css
+/* Core Document Styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #333333;
+    background-color: #f7f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header & Navigation Menu */
+header {
+    background-color: #1a365d;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #2b6cb0;
+}
+
+nav a.active {
+    background-color: #2b6cb0;
+    font-weight: bold;
+}
+
+/* Main Content Structural Grid */
+main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero {
+    background-color: #ebf8ff;
+    border-left: 5px solid #2b6cb0;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.hero h1 {
+    color: #2c5282;
+    margin-bottom: 0.5rem;
+}
+
+.content h1, .content h2 {
+    color: #1a365d;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.content p {
+    margin-bottom: 1.25rem;
+}
+
+/* Volunteer Application Form Styles */
+.application-form {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin-top: 1rem;
+}
+
+.application-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.application-form input:focus,
+.application-form select:focus,
+.application-form textarea:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.application-form button {
+    background-color: #2b6cb0;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.application-form button:hover {
+    background-color: #2c5282;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #2d3748;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+/* Responsive Web Design Adjustments */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    header .logo {
+        margin-bottom: 1rem;
+    }
+    
+    nav {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    nav a {
+        margin: 0.25rem 0;
+        padding: 0.75rem;
+    }
+}

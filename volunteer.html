@@ -1,0 +1,54 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer & Foster | Community Action Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Community Action Project</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="programs.html">Our Programs</a>
+            <a href="volunteer.html" class="active">Volunteer & Foster</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content">
+            <h1>Get Involved</h1>
+            <p>Thank you for your interest in joining our efforts. Your time, passion, and skills can truly change lives in our local neighborhood.</p>
+            
+            <h2>Application Form</h2>
+            <form action="#" method="POST" class="application-form">
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required placeholder="Your full name">
+
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required placeholder="Your email address">
+
+                <label for="interest">Area of Interest:</label>
+                <select id="interest" name="interest" required>
+                    <option value="">-- Please select an option --</option>
+                    <option value="outreach">Community Outreach Events</option>
+                    <option value="foster">Animal Foster Care Program</option>
+                    <option value="admin">Administrative Support</option>
+                </select>
+
+                <label for="comments">Tell us a bit about yourself:</label>
+                <textarea id="comments" name="comments" rows="5" placeholder="Share your experience or why you would like to join us..."></textarea>
+
+                <button type="submit">Submit Application</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Community Action Project. All rights reserved.</p>
+    </footer>
+</body>
+</html>
