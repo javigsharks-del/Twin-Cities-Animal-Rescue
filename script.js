@@ -25,13 +25,15 @@ let form, nameInput, emailInput, prefSelect, expTextArea, dynamicFeedback;
  */
 document.addEventListener("DOMContentLoaded", () => {
     // Map elements to global variables using your exact HTML field IDs
-    form = document.querySelector('form.application-form') || document.querySelector('form[action="#"]');
+    form = document.querySelector('form.application-form') || document.querySelector('form[action="#"]') || document.querySelector('form');
     if (!form) return; // Exit safely if not on the form page
 
-    nameInput = document.getElementById("fullname");
+    nameInput = document.getElementById("fullname") || document.getElementById("name");
     emailInput = document.getElementById("email");
-    prefSelect = document.getElementById("interest");
-    expTextArea = document.getElementById("comments");
+    prefSelect = document.getElementById("interest") || document.getElementById("area-of-interest");
+    
+    // Look for common text area IDs matching your screenshot's "Tell us a bit about yourself"
+    expTextArea = document.getElementById("comments") || document.getElementById("about") || document.getElementById("bio") || document.querySelector("textarea");
     
     // Create and inject a dynamic feedback div for foster notifications underneath the interest selector
     dynamicFeedback = document.createElement("div");
@@ -102,7 +104,8 @@ function checkPreferenceCondition() {
     if (!prefSelect || !dynamicFeedback) return;
 
     // Trigger explicit visibility state updates for your animal foster care option
-    if (prefSelect.value === "foster") {
+    // (Matches either the standard value "foster" or the full text visible in your screenshot)
+    if (prefSelect.value === "foster" || prefSelect.value.includes("Foster")) {
         dynamicFeedback.textContent = "🐾 Excellent choice! Our Animal Foster Care Program requires a separate structural home check orientation.";
         dynamicFeedback.style.display = "block";
     } else {
@@ -155,27 +158,33 @@ function loadSavedDraft() {
  * @param {Event} event - Submission event target link
  */
 function handleFormSubmit(event) {
-    event.preventDefault(); // Stop default action immediately to prevent empty submissions
+    event.preventDefault(); // Stop default action immediately to prevent empty page reloads
 
     let isFormValid = true;
 
     // 1. Email Format Check (Regex Match)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailInput && !emailRegex.test(emailInput.value.trim())) {
-        showFieldError(emailInput, "Please enter a valid email address (e.g., name@example.com) so our coordinators can reach you.");
-        isFormValid = false;
+    if (emailInput) {
+        if (!emailRegex.test(emailInput.value.trim())) {
+            showFieldError(emailInput, "Please enter a valid email address (e.g., name@example.com) so our coordinators can reach you.");
+            isFormValid = false;
+        }
     }
 
-    // 2. Minimum Text Area Character Range Check (15 characters)
-    if (expTextArea && expTextArea.value.trim().length < 15) {
-        showFieldError(expTextArea, "Please tell us a bit more about your background (minimum 15 characters required).");
-        isFormValid = false;
+    // 2. Minimum Text Area Character Range Check (15 characters) with safe null check
+    if (expTextArea) {
+        if (expTextArea.value.trim().length < 15) {
+            showFieldError(expTextArea, "Please tell us a bit more about your background (minimum 15 characters required).");
+            isFormValid = false;
+        }
     }
 
-    // Optional field checks to ensure bare minimum data is captured
-    if (nameInput && nameInput.value.trim() === "") {
-        showFieldError(nameInput, "Name field is required.");
-        isFormValid = false;
+    // 3. Name field check to ensure bare minimum data is captured
+    if (nameInput) {
+        if (nameInput.value.trim() === "") {
+            showFieldError(nameInput, "Name field is required.");
+            isFormValid = false;
+        }
     }
 
     // Complete actions successfully if all validation hurdles pass smoothly
@@ -212,6 +221,7 @@ function showFieldError(inputElement, message) {
  * @param {HTMLElement} inputElement - Targeted node link reference
  */
 function clearFieldError(inputElement) {
+    if (!inputElement) return;
     inputElement.style.borderColor = "";
     const container = inputElement.parentNode;
     if (container) {
@@ -249,55 +259,3 @@ function displaySuccessModal() {
     modalContent.style.maxWidth = "500px";
     modalContent.style.width = "90%";
     modalContent.style.textAlign = "center";
-    modalContent.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
-    modalContent.style.fontFamily = "sans-serif";
-
-    const modalTitle = document.createElement("h2");
-    modalTitle.style.color = "#1a365d"; // Deep Navy structural layout coloring
-    modalTitle.style.marginBottom = "15px";
-    modalTitle.textContent = "Application Saved!";
-
-    const modalBody = document.createElement("p");
-    modalBody.style.color = "#2d3748"; // Soft charcoal reading clarity text color
-    modalBody.style.lineHeight = "1.5";
-modalBody.innerHTML = `Thank you, <strong>${travelerName}</strong>! Your application details have been recorded locally. Our onboarding system is tracking this setup properly.`;
-
-    // Modal interaction button
-    const closeButton = document.createElement("button");
-    closeButton.textContent = "Return to Site";
-    closeButton.style.marginTop = "20px";
-    closeButton.style.padding = "10px 20px";
-    closeButton.style.backgroundColor = "#2b6cb0"; // Slate blue interactive color anchor
-    closeButton.style.color = "#ffffff";
-    closeButton.style.border = "none";
-    closeButton.style.borderRadius = "4px";
-    closeButton.style.cursor = "pointer";
-    closeButton.style.fontWeight = "bold";
-
-    closeButton.addEventListener("click", () => {
-        document.body.removeChild(modalOverlay);
-        
-        // Reset full local tracking state values upon successfully recording complete verified profiles
-        form.reset();
-        localStorage.removeItem(STORAGE_KEY);
-        
-        // Reset element styles back to native baseline
-        if (nameInput) nameInput.style.borderColor = "";
-        if (emailInput) emailInput.style.borderColor = "";
-        if (dynamicFeedback) {
-            dynamicFeedback.textContent = "";
-            dynamicFeedback.style.display = "none";
-        }
-    });
-
-    // Structure modal branches hierarchically
-    modalContent.appendChild(modalTitle);
-    modalContent.appendChild(modalBody);
-    closeButton.style.margin = "20px auto 0 auto";
-    closeButton.style.display = "block";
-    modalContent.appendChild(closeButton);
-    modalOverlay.appendChild(modalContent);
-    
-    // Inject the final dynamic asset straight into structural document trees
-    document.body.appendChild(modalOverlay);
-}
