@@ -4,43 +4,58 @@ html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volunteer & Foster | Community Action Project</title>
+    <title>Volunteer Application - Twin Cities Animal Rescue</title>
+    <!-- Links to your custom CSS stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header>
-        <div class="logo">Community Action Project</div>
+        <div class="logo">Twin Cities Animal Rescue</div>
         <nav>
             <a href="index.html">Home</a>
-            <a href="about.html">About Us</a>
-            <a href="programs.html">Our Programs</a>
-            <a href="volunteer.html" class="active">Volunteer & Foster</a>
+            <a href="programs.html">About & Programs</a>
+            <a href="volunteer.html" class="active">Volunteer / Foster</a>
         </nav>
     </header>
 
     <main>
-        <section class="content">
+        <div class="hero">
             <h1>Get Involved</h1>
             <p>Thank you for your interest in joining our efforts. Your time, passion, and skills can truly change lives in our local neighborhood.</p>
-            
+        </div>
+
+        <section class="content">
             <h2>Application Form</h2>
-            <form action="#" class="application-form">
-                <label for="fullname">Full Name:</label>
-                <input type="text" id="fullname" name="fullname" required placeholder="Your full name">
+            
+            <form class="application-form" action="#">
+                <!-- Personal Information -->
+                <p>
+                    <label for="fullname">Full Name:</label>
+                    <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name">
+                </p>
 
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" required placeholder="Your email address">
+                <p>
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required placeholder="name@example.com">
+                </p>
 
-                <label for="interest">Area of Interest:</label>
-                <select id="interest" name="interest" required>
-                    <option value="">-- Please select an option --</option>
-                    <option value="outreach">Community Outreach Events</option>
-                    <option value="foster">Animal Foster Care Program</option>
-                    <option value="admin">Administrative Support</option>
-                </select>
+                <!-- Program Preferences -->
+                <p>
+                    <label for="interest">Area of Interest:</label>
+                    <select id="interest" name="interest" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="volunteer">Volunteer Placement</option>
+                        <option value="foster">Pet Fostering</option>
+                        <option value="both">Both Programs</option>
+                    </select>
+                </p>
 
-                <label for="comments">Tell us a bit about yourself:</label>
-                <textarea id="comments" name="comments" rows="5" placeholder="Share your experience or why you would like to join us..."></textarea>
+                <!-- Experience Background & Notes -->
+                <p>
+                    <label for="comments">Tell us a bit about yourself:</label>
+                    <textarea id="comments" name="comments" rows="5" required placeholder="Please tell us a bit about your background (minimum 15 characters required)..."></textarea>
+                </p>
 
                 <button type="submit">Submit Application</button>
             </form>
@@ -48,8 +63,10 @@ html
     </main>
 
     <footer>
-        <p>&copy; 2026 Community Action Project. All rights reserved.</p>
+        <p>&copy; 2026 Twin Cities Animal Rescue. All Rights Reserved.</p>
     </footer>
+
+    <!-- Links to your custom interactive JavaScript logic at the baseline execution depth -->
     <script src="script.js"></script>
 </body>
 </html>
