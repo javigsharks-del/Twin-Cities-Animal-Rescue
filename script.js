@@ -3,7 +3,7 @@ javascript
  * Twin Cities Animal Rescue - Volunteer/Foster Application Interactivity
  * Course: Introduction to Web Development
  * Student: Javier Garza
- * Date: November 9, 2026
+ * Date: November 10, 2026
  */
 
 // Object structure to manage the real-time application data state
@@ -28,18 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
     form = document.querySelector('form.application-form') || document.querySelector('form[action="#"]') || document.querySelector('form');
     if (!form) return; // Exit safely if not on the form page
 
+    // Prevent native browser tooltips from blocking your custom JavaScript modal
+    form.setAttribute("novalidate", true);
+
     nameInput = document.getElementById("fullname") || document.getElementById("name");
     emailInput = document.getElementById("email");
     prefSelect = document.getElementById("interest") || document.getElementById("area-of-interest");
-    
-    // Look for common text area IDs matching your screenshot's "Tell us a bit about yourself"
     expTextArea = document.getElementById("comments") || document.getElementById("about") || document.getElementById("bio") || document.querySelector("textarea");
     
     // Create and inject a dynamic feedback div for foster notifications underneath the interest selector
     dynamicFeedback = document.createElement("div");
     dynamicFeedback.style.marginTop = "10px";
+    dynamicFeedback.style.marginBottom = "15px";
     dynamicFeedback.style.fontWeight = "bold";
-    dynamicFeedback.style.color = "#2b6cb0"; // Slate blue accent color from Touchstone 3
+    dynamicFeedback.style.color = "#2b6cb0"; // Slate blue accent color
     if (prefSelect && prefSelect.parentNode) {
         prefSelect.parentNode.insertBefore(dynamicFeedback, prefSelect.nextSibling);
     }
@@ -104,7 +106,6 @@ function checkPreferenceCondition() {
     if (!prefSelect || !dynamicFeedback) return;
 
     // Trigger explicit visibility state updates for your animal foster care option
-    // (Matches either the standard value "foster" or the full text visible in your screenshot)
     if (prefSelect.value === "foster" || prefSelect.value.includes("Foster")) {
         dynamicFeedback.textContent = "🐾 Excellent choice! Our Animal Foster Care Program requires a separate structural home check orientation.";
         dynamicFeedback.style.display = "block";
@@ -162,7 +163,15 @@ function handleFormSubmit(event) {
 
     let isFormValid = true;
 
-    // 1. Email Format Check (Regex Match)
+    // 1. Name field check
+    if (nameInput) {
+        if (nameInput.value.trim() === "") {
+            showFieldError(nameInput, "Full Name is required.");
+            isFormValid = false;
+        }
+    }
+
+    // 2. Email Format Check (Regex Match)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailInput) {
         if (!emailRegex.test(emailInput.value.trim())) {
@@ -171,18 +180,18 @@ function handleFormSubmit(event) {
         }
     }
 
-    // 2. Minimum Text Area Character Range Check (15 characters) with safe null check
-    if (expTextArea) {
-        if (expTextArea.value.trim().length < 15) {
-            showFieldError(expTextArea, "Please tell us a bit more about your background (minimum 15 characters required).");
+    // 3. Dropdown Selection Check
+    if (prefSelect) {
+        if (prefSelect.value === "") {
+            showFieldError(prefSelect, "Please select an Area of Interest from the dropdown.");
             isFormValid = false;
         }
     }
 
-    // 3. Name field check to ensure bare minimum data is captured
-    if (nameInput) {
-        if (nameInput.value.trim() === "") {
-            showFieldError(nameInput, "Name field is required.");
+    // 4. Minimum Text Area Character Range Check (15 characters)
+    if (expTextArea) {
+        if (expTextArea.value.trim().length < 15) {
+            showFieldError(expTextArea, "Please tell us a bit more about your background (minimum 15 characters required).");
             isFormValid = false;
         }
     }
@@ -208,7 +217,8 @@ function showFieldError(inputElement, message) {
     errorDiv.style.color = "#dc3545";
     errorDiv.style.fontSize = "0.9em";
     errorDiv.style.fontWeight = "bold";
-    errorDiv.style.marginTop = "5px";
+    errorDiv.style.marginTop = "-15px";
+    errorDiv.style.marginBottom = "15px";
     errorDiv.textContent = message;
 
     if (inputElement.parentNode) {
@@ -253,9 +263,52 @@ function displaySuccessModal() {
 
     // Interactive message prompt container content
     const modalContent = document.createElement("div");
-    modalContent.style.backgroundColor = "#f7f9fa"; // Off-white backdrop match from project report setup
+    modalContent.style.backgroundColor = "#f7f9fa";
     modalContent.style.padding = "30px";
     modalContent.style.borderRadius = "8px";
-    modalContent.style.maxWidth = "500px";
-    modalContent.style.width = "90%";
-    modalContent.style.textAlign = "center";
+modalContent.style.maxWidth = "500px";
+modalContent.style.width = "90%";
+modalContent.style.textAlign = "center";
+modalContent.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
+modalContent.style.fontFamily = "Arial, Helvetica, sans-serif";
+const modalTitle = document.createElement("h2");
+modalTitle.style.color = "#1a365d";
+modalTitle.style.marginBottom = "15px";
+modalTitle.textContent = "Application Saved!";
+const modalBody = document.createElement("p");
+modalBody.style.color = "#2d3748";
+modalBody.style.lineHeight = "1.5";
+modalBody.innerHTML = `Thank you, <strong>${travelerName}</strong>! Your application details have been recorded locally. Our onboarding system is tracking this setup properly.`;
+// Modal interaction button
+const closeButton = document.createElement("button");
+closeButton.textContent = "Return to Site";
+closeButton.style.margin = "20px auto 0 auto";
+closeButton.style.display = "block";
+closeButton.style.padding = "10px 20px";
+closeButton.style.backgroundColor = "#2b6cb0";
+closeButton.style.color = "#ffffff";
+closeButton.style.border = "none";
+closeButton.style.borderRadius = "4px";
+closeButton.style.cursor = "pointer";
+closeButton.style.fontWeight = "bold";
+closeButton.addEventListener("click", () => {
+document.body.removeChild(modalOverlay);
+// Reset full local tracking state values upon successfully recording complete verified profiles
+if (form) form.reset();
+localStorage.removeItem(STORAGE_KEY);
+// Reset element styles back to native baseline
+if (nameInput) nameInput.style.borderColor = "";
+if (emailInput) emailInput.style.borderColor = "";
+if (dynamicFeedback) {
+dynamicFeedback.textContent = "";
+dynamicFeedback.style.display = "none";
+}
+});
+// Structure modal branches hierarchically
+modalContent.appendChild(modalTitle);
+modalContent.appendChild(modalBody);
+modalContent.appendChild(closeButton);
+modalOverlay.appendChild(modalContent);
+// Inject the final dynamic asset straight into structural document trees
+document.body.appendChild(modalOverlay);
+}
