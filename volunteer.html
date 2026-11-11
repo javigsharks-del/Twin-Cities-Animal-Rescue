@@ -67,6 +67,132 @@ html
     </footer>
 
     <!-- Links to your custom interactive JavaScript logic at the baseline execution depth -->
-    <script src="script.js"></script>
+ <script>
+    const applicationDraft = { name: "", email: "", preference: "", experience: "" };
+    const STORAGE_KEY = "tcar_volunteer_draft";
+    let form, nameInput, emailInput, prefSelect, expTextArea, dynamicFeedback;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        form = document.querySelector('form.application-form') || document.querySelector('form');
+        if (!form) return;
+        form.setAttribute("novalidate", true);
+
+        nameInput = document.getElementById("fullname");
+        emailInput = document.getElementById("email");
+        prefSelect = document.getElementById("interest");
+        expTextArea = document.getElementById("comments");
+
+        dynamicFeedback = document.createElement("div");
+        dynamicFeedback.style.marginTop = "-10px";
+        dynamicFeedback.style.marginBottom = "15px";
+        dynamicFeedback.style.fontWeight = "bold";
+        dynamicFeedback.style.color = "#2b6cb0";
+        if (prefSelect && prefSelect.parentNode) {
+            prefSelect.parentNode.insertBefore(dynamicFeedback, prefSelect.nextSibling);
+        }
+
+        form.addEventListener("input", (event) => {
+            const target = event.target;
+            if (!target) return;
+            if (target === nameInput) applicationDraft.name = target.value;
+            if (target === emailInput) applicationDraft.email = target.value;
+            if (target === prefSelect) applicationDraft.preference = target.value;
+            if (target === expTextArea) applicationDraft.experience = target.value;
+
+            clearFieldError(target);
+            if ((target === nameInput || target === emailInput) && target.value.trim().length > 0) {
+                target.style.borderColor = "#28a745";
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(applicationDraft));
+        });
+
+        if (prefSelect) {
+            prefSelect.addEventListener("change", () => {
+                if (prefSelect.value === "foster") {
+                    dynamicFeedback.textContent = "🐾 Excellent choice! Our Animal Foster Care Program requires a separate home check orientation.";
+                    dynamicFeedback.style.display = "block";
+                } else {
+                    dynamicFeedback.textContent = "";
+                    dynamicFeedback.style.display = "none";
+                }
+            });
+        }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            let isFormValid = true;
+
+            if (nameInput && nameInput.value.trim() === "") {
+                showFieldError(nameInput, "Full Name is required.");
+                isFormValid = false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput && !emailRegex.test(emailInput.value.trim())) {
+                showFieldError(emailInput, "Please enter a valid email address (e.g., name@example.com).");
+                isFormValid = false;
+            }
+            if (prefSelect && prefSelect.value === "") {
+                showFieldError(prefSelect, "Please select an Area of Interest.");
+                isFormValid = false;
+            }
+            if (expTextArea && expTextArea.value.trim().length < 15) {
+                showFieldError(expTextArea, "Please tell us a bit more about your background (minimum 15 characters required).");
+                isFormValid = false;
+            }
+
+            if (isFormValid) {
+                displaySuccessModal();
+            }
+        });
+    });
+
+    function showFieldError(inputElement, message) {
+        clearFieldError(inputElement);
+        inputElement.style.borderColor = "#dc3545";
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "field-error-msg";
+        errorDiv.style.color = "#dc3545";
+        errorDiv.style.fontSize = "0.9em";
+        errorDiv.style.fontWeight = "bold";
+        errorDiv.style.marginTop = "-15px";
+        errorDiv.style.marginBottom = "15px";
+        errorDiv.textContent = message;
+        inputElement.parentNode.insertBefore(errorDiv, inputElement.nextSibling);
+    }
+
+    function clearFieldError(inputElement) {
+        if (!inputElement) return;
+        inputElement.style.borderColor = "";
+        const errorMsg = inputElement.parentNode.querySelector(".field-error-msg");
+        if (errorMsg) inputElement.parentNode.removeChild(errorMsg);
+    }
+
+    function displaySuccessModal() {
+        const travelerName = nameInput ? nameInput.value.trim() : "Volunteer";
+        const modalOverlay = document.createElement("div");
+        modalOverlay.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:9999;";
+
+        const modalContent = document.createElement("div");
+        modalContent.style.cssText = "background:#f7f9fa;padding:30px;border-radius:8px;max-width:500px;width:90%;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-family:Arial,sans-serif;";
+
+        modalContent.innerHTML = `
+            <h2 style="color:#1a365d;margin-bottom:15px;">Application Saved!</h2>
+            <p style="color:#2d3748;line-height:1.5;">Thank you, <strong>${travelerName}</strong>! Your application details have been recorded locally. Our onboarding system is tracking this setup properly.</p>
+            <button id="closeModalBtn" style="margin:20px auto 0;display:block;padding:10px 20px;background:#2b6cb0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">Return to Site</button>
+        `;
+
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+
+        document.getElementById("closeModalBtn").addEventListener("click", () => {
+            document.body.removeChild(modalOverlay);
+            form.reset();
+            localStorage.removeItem(STORAGE_KEY);
+            if (nameInput) nameInput.style.borderColor = "";
+            if (emailInput) emailInput.style.borderColor = "";
+            if (dynamicFeedback) dynamicFeedback.style.display = "none";
+        });
+    }
+    </script>
 </body>
 </html>
