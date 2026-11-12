@@ -1,4 +1,3 @@
-javascript
 /**
  * Twin Cities Animal Rescue - Volunteer/Foster Application Interactivity
  * Course: Introduction to Web Development
